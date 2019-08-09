@@ -2,8 +2,6 @@
 
 #include <Arduino.h>
 #include <Stepper.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
@@ -13,6 +11,10 @@
 #define JOYSTICK_MAX_ANALOG 4095
 #define SERVICE_UUID        "e6d0cf52-0695-43d1-bab8-5fcfe298a94a"
 #define CHARACTERISTIC_UUID "f05e2e6a-b8b7-4e12-b7c8-d2dda61d2e5c"
+
+void moveMotorSingleStep(Stepper stepper_obj, int sign, int *current_step);
+void moveMotorPercentage(Stepper stepper_obj, float percent, int *current_step);
+void stopMotor(Stepper stepper_obj);
 
 BLEServer* pServer = NULL;
 BLECharacteristic* pCharacteristic = NULL;
@@ -39,14 +41,11 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 
 const int stepsPerRevolution = 200;  // change this to fit the number of steps per revolution
-const int max_steps = MAX_REVOLUTIONS * stepsPerRevolution;
+const int MAX_STEPS = MAX_REVOLUTIONS * stepsPerRevolution;
 // for your motor
 int speed = 59;
-double direction = 0.0;
-int c;
-
-
-
+float direction = 0.0;
+int current_step = 0;
 
 // initialize the stepper library on pins 8 through 11:
 Stepper myStepper(stepsPerRevolution, 25, 26, 27, 14);
@@ -93,13 +92,28 @@ void setup() {
   pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
   BLEDevice::startAdvertising();
   Serial.println("Waiting a client connection to notify...");
+  pCharacteristic->setValue((uint8_t*)"0", 2);
   
 }
 
 void loop() {
   char *characteristic_value;
   int *joystick_values;
+  if (current_step < 0) {
+    current_step = 0;
+  } else if (current_step > MAX_STEPS) {
+    current_step = MAX_STEPS;
+  }
   
+  joystick_values = readJoystick();
+  while (joystick_values[0] > 1500) {
+    moveMotorSingleStep(myStepper, 1, &current_step);
+    joystick_values = readJoystick();
+  } 
+  while (joystick_values[0] < -1500) {
+    moveMotorSingleStep(myStepper, -1, &current_step);
+    joystick_values = readJoystick();
+  }
   // notify changed value
   if (deviceConnected) {
       //pCharacteristic->setValue((uint8_t*)&value, 4);
@@ -107,43 +121,15 @@ void loop() {
       characteristic_value = (char *)(pCharacteristic->getValue().c_str());
       //characteristic_data = pCharacteristic->getData();
 
-      joystick_values = readJoystick();
-      Serial.print("x: ");
-      Serial.print(joystick_values[0]);
-      Serial.print("  y: ");
-      Serial.print(joystick_values[1]);
-      Serial.print("  sw: ");
-      Serial.print(joystick_values[2]);
-      Serial.print("\n");
-      while (joystick_values[0] > 1500) {
-        myStepper.step(10);
-        joystick_values = readJoystick();
-      } 
-      while (joystick_values[0] < -1500) {
-        myStepper.step(-10);
-        joystick_values = readJoystick();
-      }
+      
 
-      if (atof(characteristic_value) > 0) {
-      Serial.println("Rotating Clockwise");
-      direction = atof(characteristic_value);
-      Serial.println(atof(characteristic_value));
-      Serial.println(" <- direction");
-      myStepper.step(max_steps * direction / 100.);
-      }
-      else if (atof(characteristic_value) < 0) {
-        Serial.println("Rotating Counter-Clockwise");
+      if (strcmp(characteristic_value, "0") != 0) {
         direction = atof(characteristic_value);
-        Serial.println(" <- direction");
-        Serial.println(atof(characteristic_value));
-        myStepper.step(max_steps * direction / 100.);
+        moveMotorPercentage(myStepper, direction, &current_step);
       }
       else {
-        direction = 0.0;
-        myStepper.step(1 * direction / 100.);
+        stopMotor(myStepper);
       }
-
-
       
       pCharacteristic->setValue((uint8_t*)"0", 2);
       //Serial.println(direction);
@@ -178,4 +164,60 @@ int *readJoystick()
   jvalues[2] = swval;
 
   return jvalues;
+}
+
+void moveMotorPercentage(Stepper stepper_obj, float percent, int *current_step)
+{
+  int n_steps = (MAX_STEPS * percent) / 100;
+  Serial.print(*current_step);
+  Serial.print(" out of  ");
+  Serial.print(MAX_STEPS);
+  Serial.print(" -->  ");
+  Serial.print(n_steps);
+  Serial.print("\n");
+  int sign;
+  if (n_steps < 0) {
+    sign = -1;
+    n_steps = -n_steps;
+  } else {
+    sign = 1;
+  }
+  while (n_steps-- > 0 && *current_step <= MAX_STEPS && *current_step >= 0) {
+    stepper_obj.step(sign);
+    *current_step += sign;
+  }
+  Serial.print(*current_step);
+  Serial.print(" out of  ");
+  Serial.print(MAX_STEPS);
+  Serial.print(" -->  ");
+  Serial.print(n_steps);
+  Serial.print("\n");
+  
+}
+
+void moveMotorSingleStep(Stepper stepper_obj, int sign, int *current_step)
+{
+  Serial.print(*current_step);
+  Serial.print(" out of  ");
+  Serial.print(MAX_STEPS);
+  Serial.print(" -->  ");
+  Serial.print(sign);
+  Serial.print("\n");
+  int n_steps = 10;
+  while (n_steps-- > 0 && *current_step <= MAX_STEPS && *current_step >= 0) {
+    stepper_obj.step(sign);
+    *current_step += sign;
+  }
+  Serial.print(*current_step);
+  Serial.print(" out of  ");
+  Serial.print(MAX_STEPS);
+  Serial.print(" -->  ");
+  Serial.print(n_steps);
+  Serial.print("\n");
+  
+}
+
+void stopMotor(Stepper stepper_obj)
+{
+  stepper_obj.step(0);
 }
