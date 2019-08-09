@@ -168,6 +168,9 @@ int *readJoystick()
 
 void moveMotorPercentage(Stepper stepper_obj, float percent, int *current_step)
 {
+  /****************************************
+   * NEED TO CUT POWER USING ENABLE INPUTS ON L298 AFTER MOVING MOTOR, THEN RE-ENABLE POWER BEFORE MOVING
+   ***************************************/
   int n_steps = (MAX_STEPS * percent) / 100;
   Serial.print(*current_step);
   Serial.print(" out of  ");
