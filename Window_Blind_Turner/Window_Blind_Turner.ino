@@ -28,6 +28,9 @@ const int SW_pin = 13; // digital pin connected to switch output
 const int X_pin = 32; // analog pin connected to X output
 const int Y_pin = 33; // analog pin connected to Y output
 
+const int enA = 34;
+const int enB = 35;
+
 
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
@@ -54,6 +57,12 @@ Stepper myStepper(stepsPerRevolution, 25, 26, 27, 14);
 void setup() {
 
   Serial.begin(9600);
+
+  // set EN pins for output
+  //pinMode(enA, OUTPUT);
+  //pinMode(enB, OUTPUT);
+  //digitalWrite(enA, HIGH);
+  //digitalWrite(enB, LOW);
 
   // set pins for analog stick
   pinMode(SW_pin, INPUT);
