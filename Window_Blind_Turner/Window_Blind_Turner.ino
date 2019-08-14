@@ -43,7 +43,7 @@ class MyServerCallbacks: public BLEServerCallbacks {
 const int stepsPerRevolution = 200;  // change this to fit the number of steps per revolution
 const int MAX_STEPS = MAX_REVOLUTIONS * stepsPerRevolution;
 // for your motor
-int speed = 59;
+int speed = 60;
 float direction = 0.0;
 int current_step = 0;
 
@@ -54,6 +54,7 @@ Stepper myStepper(stepsPerRevolution, 25, 26, 27, 14);
 void setup() {
 
   Serial.begin(9600);
+
   // set pins for analog stick
   pinMode(SW_pin, INPUT);
   digitalWrite(SW_pin, HIGH);
@@ -106,23 +107,22 @@ void loop() {
   }
   
   joystick_values = readJoystick();
-  while (joystick_values[0] > 1500) {
-    moveMotorSingleStep(myStepper, 1, &current_step);
-    joystick_values = readJoystick();
-  } 
-  while (joystick_values[0] < -1500) {
-    moveMotorSingleStep(myStepper, -1, &current_step);
-    joystick_values = readJoystick();
+  if (joystick_values[0] > 1500 || joystick_values[0] < -1500) {
+    while (joystick_values[0] > 1500) {
+      moveMotorSingleStep(myStepper, 1, &current_step);
+      joystick_values = readJoystick();
+    } 
+    while (joystick_values[0] < -1500) {
+      moveMotorSingleStep(myStepper, -1, &current_step);
+      joystick_values = readJoystick();
+    }
   }
+  
   // notify changed value
   if (deviceConnected) {
-      //pCharacteristic->setValue((uint8_t*)&value, 4);
       pCharacteristic->notify();
       characteristic_value = (char *)(pCharacteristic->getValue().c_str());
-      //characteristic_data = pCharacteristic->getData();
-
       
-
       if (strcmp(characteristic_value, "0") != 0) {
         direction = atof(characteristic_value);
         moveMotorPercentage(myStepper, direction, &current_step);
@@ -130,9 +130,7 @@ void loop() {
       else {
         stopMotor(myStepper);
       }
-      
       pCharacteristic->setValue((uint8_t*)"0", 2);
-      //Serial.println(direction);
       
       delay(10); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
   }
@@ -171,6 +169,9 @@ void moveMotorPercentage(Stepper stepper_obj, float percent, int *current_step)
   /****************************************
    * NEED TO CUT POWER USING ENABLE INPUTS ON L298 AFTER MOVING MOTOR, THEN RE-ENABLE POWER BEFORE MOVING
    ***************************************/
+
+  // digitalWrite(enA, HIGH);
+  // digitalWrite(enB, HIGH);
   int n_steps = (MAX_STEPS * percent) / 100;
   Serial.print(*current_step);
   Serial.print(" out of  ");
@@ -195,29 +196,34 @@ void moveMotorPercentage(Stepper stepper_obj, float percent, int *current_step)
   Serial.print(" -->  ");
   Serial.print(n_steps);
   Serial.print("\n");
-  
+
+  // digitalWrite(enA, LOW);
+  // digitalWrite(enB, LOW);
 }
 
 void moveMotorSingleStep(Stepper stepper_obj, int sign, int *current_step)
 {
+  /*
   Serial.print(*current_step);
   Serial.print(" out of  ");
   Serial.print(MAX_STEPS);
   Serial.print(" -->  ");
   Serial.print(sign);
   Serial.print("\n");
+  */
   int n_steps = 10;
   while (n_steps-- > 0 && *current_step <= MAX_STEPS && *current_step >= 0) {
     stepper_obj.step(sign);
     *current_step += sign;
   }
+  /*
   Serial.print(*current_step);
   Serial.print(" out of  ");
   Serial.print(MAX_STEPS);
   Serial.print(" -->  ");
   Serial.print(n_steps);
   Serial.print("\n");
-  
+  */
 }
 
 void stopMotor(Stepper stepper_obj)
