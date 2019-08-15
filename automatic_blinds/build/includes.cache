@@ -1,0 +1,177 @@
+[
+  {
+    "Sourcefile": "",
+    "Include": "",
+    "Includepath": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\cores\\esp32"
+  },
+  {
+    "Sourcefile": "",
+    "Include": "",
+    "Includepath": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\variants\\esp32"
+  },
+  {
+    "Sourcefile": "c:\\Users\\samue\\Documents\\Window_Blind_Turner_Newest\\build\\sketch\\Window_Blind_Turner.ino.cpp",
+    "Include": "Stepper.h",
+    "Includepath": "C:\\Program Files (x86)\\Arduino\\libraries\\Stepper\\src"
+  },
+  {
+    "Sourcefile": "c:\\Users\\samue\\Documents\\Window_Blind_Turner_Newest\\build\\sketch\\Window_Blind_Turner.ino.cpp",
+    "Include": "BLEDevice.h",
+    "Includepath": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src"
+  },
+  {
+    "Sourcefile": "c:\\Users\\samue\\Documents\\Window_Blind_Turner_Newest\\build\\sketch\\Window_Blind_Turner.ino.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Program Files (x86)\\Arduino\\libraries\\Stepper\\src\\Stepper.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLE2902.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLE2904.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEAddress.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEAdvertisedDevice.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEAdvertising.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEBeacon.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLECharacteristic.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLECharacteristicMap.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEClient.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEDescriptor.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEDescriptorMap.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEDevice.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEEddystoneTLM.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEEddystoneURL.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEExceptions.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEHIDDevice.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLERemoteCharacteristic.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLERemoteDescriptor.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLERemoteService.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEScan.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLESecurity.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEServer.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEService.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEServiceMap.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEUUID.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEUtils.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\BLEValue.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\FreeRTOS.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "C:\\Users\\samue\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.2\\libraries\\BLE\\src\\GeneralUtils.cpp",
+    "Include": "",
+    "Includepath": ""
+  }
+]
