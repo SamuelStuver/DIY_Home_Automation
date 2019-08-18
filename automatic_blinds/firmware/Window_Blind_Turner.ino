@@ -1,11 +1,7 @@
-#include <Stepper.h>
-
 #include <Arduino.h>
 #include <Stepper.h>
 #include <string.h>
-#include <BLEDevice.h>
-#include <BLEServer.h>
-#include <BLEUtils.h>
+#include <WiFi.h>
 
 #define MAX_REVOLUTIONS 8
 #define JOYSTICK_MAX_ANALOG 4095
@@ -16,31 +12,15 @@ void moveMotorSingleStep(Stepper stepper_obj, int sign, int *current_step);
 void moveMotorPercentage(Stepper stepper_obj, float percent, int *current_step);
 void stopMotor(Stepper stepper_obj);
 
-BLEServer* pServer = NULL;
-BLECharacteristic* pCharacteristic = NULL;
-bool deviceConnected = false;
-bool oldDeviceConnected = false;
 uint32_t value = 0;
-
-
 
 const int SW_pin = 13; // digital pin connected to switch output
 const int X_pin = 32; // analog pin connected to X output
 const int Y_pin = 33; // analog pin connected to Y output
 
-const int enA = 34;
-const int enB = 35;
+const int step_pins[4] = {25, 26, 27,14}; // Stepper motor driver pins
 
-
-class MyServerCallbacks: public BLEServerCallbacks {
-    void onConnect(BLEServer* pServer) {
-      deviceConnected = true;
-    };
-
-    void onDisconnect(BLEServer* pServer) {
-      deviceConnected = false;
-    }
-};
+const int enA[2] = {34, 25}; //Stepper motor enable pins
 
 
 const int stepsPerRevolution = 200;  // change this to fit the number of steps per revolution
@@ -51,7 +31,7 @@ float direction = 0.0;
 int current_step = 0;
 
 // initialize the stepper library on pins 8 through 11:
-Stepper myStepper(stepsPerRevolution, 25, 26, 27, 14);
+Stepper myStepper(stepsPerRevolution, step_pins[0], step_pins[1], step_pins[2], step_pins[3]);
 
 
 void setup() {
@@ -67,47 +47,15 @@ void setup() {
   // set pins for analog stick
   pinMode(SW_pin, INPUT);
   digitalWrite(SW_pin, HIGH);
-
-  Serial.println("Starting BLE work!");
   
   // set the motor speed:
   myStepper.setSpeed(speed);
-
-  // Create the BLE Device
-  BLEDevice::init("ESP32");
-
-  // Create the BLE Server
-  pServer = BLEDevice::createServer();
-  pServer->setCallbacks(new MyServerCallbacks());
-
-  // Create the BLE Service
-  BLEService *pService = pServer->createService(SERVICE_UUID);
-
-  // Create a BLE Characteristic
-  pCharacteristic = pService->createCharacteristic(
-                      CHARACTERISTIC_UUID,
-                      BLECharacteristic::PROPERTY_READ   |
-                      BLECharacteristic::PROPERTY_WRITE  |
-                      BLECharacteristic::PROPERTY_NOTIFY |
-                      BLECharacteristic::PROPERTY_INDICATE
-                    );
-
-  // Start the service
-  pService->start();
-
-  // Start advertising
-  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
-  pAdvertising->setScanResponse(false);
-  pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
-  BLEDevice::startAdvertising();
-  Serial.println("Waiting a client connection to notify...");
-  pCharacteristic->setValue((uint8_t*)"0", 2);
   
 }
 
+
 void loop() {
-  char *characteristic_value;
+
   int *joystick_values;
   if (current_step < 0) {
     current_step = 0;
@@ -126,36 +74,6 @@ void loop() {
       joystick_values = readJoystick();
     }
   }
-  
-  // notify changed value
-  if (deviceConnected) {
-      pCharacteristic->notify();
-      characteristic_value = (char *)(pCharacteristic->getValue().c_str());
-      
-      if (strcmp(characteristic_value, "0") != 0) {
-        direction = atof(characteristic_value);
-        moveMotorPercentage(myStepper, direction, &current_step);
-      }
-      else {
-        stopMotor(myStepper);
-      }
-      pCharacteristic->setValue((uint8_t*)"0", 2);
-      
-      delay(10); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
-  }
-  // disconnecting
-  if (!deviceConnected && oldDeviceConnected) {
-      delay(500); // give the bluetooth stack the chance to get things ready
-      pServer->startAdvertising(); // restart advertising
-      Serial.println("start advertising");
-      oldDeviceConnected = deviceConnected;
-  }
-  // connecting
-  if (deviceConnected && !oldDeviceConnected) {
-      // do stuff here on connecting
-      oldDeviceConnected = deviceConnected;
-  }
-  delay(10);
 }
 
 int *readJoystick()
@@ -212,27 +130,13 @@ void moveMotorPercentage(Stepper stepper_obj, float percent, int *current_step)
 
 void moveMotorSingleStep(Stepper stepper_obj, int sign, int *current_step)
 {
-  /*
-  Serial.print(*current_step);
-  Serial.print(" out of  ");
-  Serial.print(MAX_STEPS);
-  Serial.print(" -->  ");
-  Serial.print(sign);
-  Serial.print("\n");
-  */
+
   int n_steps = 10;
   while (n_steps-- > 0 && *current_step <= MAX_STEPS && *current_step >= 0) {
     stepper_obj.step(sign);
     *current_step += sign;
   }
-  /*
-  Serial.print(*current_step);
-  Serial.print(" out of  ");
-  Serial.print(MAX_STEPS);
-  Serial.print(" -->  ");
-  Serial.print(n_steps);
-  Serial.print("\n");
-  */
+
 }
 
 void stopMotor(Stepper stepper_obj)
