@@ -1,7 +1,7 @@
 {
     "board": "esp32:esp32:esp32",
     "configuration": "PSRAM=disabled,PartitionScheme=default,CPUFreq=240,FlashMode=qio,FlashFreq=80,FlashSize=4M,UploadSpeed=921600,DebugLevel=none",
-    "sketch": "firmware\\Window_Blind_Turner.ino",
-    "port": "COM3",
+    "sketch": "firmware\\Window_Blind_Turner_WiFi.ino",
+    "port": "192.168.0.27",
     "output": "../build"
 }
