@@ -3,7 +3,7 @@
 #include <string.h>
 #include <WiFi.h>
 #include <WiFiConfig.h>
-#include <WiFiMulti.h>
+#include <HTTPClient.h>
 
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
@@ -14,24 +14,23 @@
 #define SERVICE_UUID        "e6d0cf52-0695-43d1-bab8-5fcfe298a94a"
 #define CHARACTERISTIC_UUID "f05e2e6a-b8b7-4e12-b7c8-d2dda61d2e5c"
 
-WiFiMulti WiFiMulti;
 
 void moveMotorSingleStep(Stepper stepper_obj, int sign, int *current_step);
 void moveMotorPercentage(Stepper stepper_obj, float percent, int *current_step);
 void stopMotor(Stepper stepper_obj);
 void ConnectToWiFi();
 void setupOTA();
+void getRequest();
+
+const char* host = "192.168.0.24";
 
 uint32_t value = 0;
 
 const int SW_pin = 13; // digital pin connected to switch output
 const int X_pin = 32; // analog pin connected to X output
 const int Y_pin = 33; // analog pin connected to Y output
-
 const int step_pins[4] = {25, 26, 27,14}; // Stepper motor driver pins
-
 const int enA[2] = {34, 25}; //Stepper motor enable pins
-
 
 const int stepsPerRevolution = 200;  // change this to fit the number of steps per revolution
 const int MAX_STEPS = MAX_REVOLUTIONS * stepsPerRevolution;
@@ -76,7 +75,7 @@ void setup() {
 void loop() {
 
   ArduinoOTA.handle();
-  sendDataToServer();
+  getRequest();
 
 }
 
@@ -174,15 +173,15 @@ void setupOTA()
 void ConnectToWiFi()
 {
   // We start by connecting to a WiFi network
-    WiFiMulti.addAP(SSID, WiFiPassword);
+    WiFi.begin(SSID, WiFiPassword);
 
     Serial.println();
     Serial.println();
     Serial.print("Waiting for WiFi... ");
 
-    while(WiFiMulti.run() != WL_CONNECTED) {
-        Serial.print(".");
+    while (WiFi.status() != WL_CONNECTED) {
         delay(500);
+        Serial.print(".");
     }
 
     Serial.println("");
@@ -193,34 +192,34 @@ void ConnectToWiFi()
     delay(500);
 }
 
-void sendDataToServer()
+
+int server_value = 0;
+
+void getRequest()
 {
-    const uint16_t port = 80;
-    const char * host = "192.168.0.24"; // ip or dns
-
-    Serial.print("Connecting to ");
-    Serial.println(host);
-
-    // Use WiFiClient class to create TCP connections
-    WiFiClient client;
-
-    if (!client.connect(host, port)) {
-        Serial.println("Connection failed.");
-        Serial.println("Waiting 5 seconds before retrying...");
-        delay(5000);
-        return;
+    if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
+ 
+    HTTPClient http;
+ 
+    //http.begin("http://jsonplaceholder.typicode.com/comments?id=10"); //Specify the URL
+    
+    http.begin("http://192.168.0.24:8080");
+    
+    int httpCode = http.GET();                                        //Make the request
+    Serial.println(httpCode);
+    if (httpCode > 0) { //Check for the returning code
+ 
+        String payload = http.getString();
+        Serial.println(httpCode);
+        Serial.println(payload);
+      }
+ 
+    else {
+      Serial.println("Error on HTTP request");
     }
-
-    // This will send a request to the server
-    client.print("Send this data to the server");
-
-    //read back one line from the server
-    String line = client.readStringUntil('\r');
-    client.println(line);
-
-    Serial.println("Closing connection.");
-    client.stop();
-
-    Serial.println("Waiting 5 seconds before restarting...");
-    delay(5000);
+ 
+    http.end(); //Free the resources
+  }
+ 
+  delay(5000);
 }
